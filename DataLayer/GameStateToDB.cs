@@ -9,11 +9,25 @@ namespace DataLayer
 {
     public class GameStateToDB : IGameState
     {
+        public void UpdateGameState(GameStateRecord gsr, string nameOfSave)
+        {
+            PokerSimulator2022Context ps = new PokerSimulator2022Context();
+            if (ps.Game.Where(x => x.Name == nameOfSave).Any())
+            {
+                Game g = ps.Game.Where(x=>x.Name == nameOfSave).First();
+                ps.Remove(g);
+                ps.SaveChanges();
+            }
+            else
+                throw new Exception("Savefile doesnt exist");
+            SaveGameState(gsr, nameOfSave);
+        }
         public void SaveGameState(GameStateRecord gsr, string nameOfSave)
         {
             PokerSimulator2022Context ps = new PokerSimulator2022Context();
             if (ps.Game.Where(x => x.Name == nameOfSave).Any())
                 throw new Exception("Savefile already exist");
+
             //Händer
             Game g = new Game() { Name = nameOfSave ,Start = DateTime.Now};
             for (int i = 0; i < gsr.Hands.Count; i++)

@@ -10,6 +10,7 @@ namespace GameEngine.Classes
     public class Hand<T>
     {
         private int id;
+        private string playerName;
         private int score;
         private int tiebreaker;
         private List<T> list;
@@ -33,6 +34,7 @@ namespace GameEngine.Classes
         public int Score { get { return score; } set { score = value; } }
         public int TieBreaker { get { return tiebreaker; } set { tiebreaker = value; } }
         public int ID { get { return id; } }
+        public string PlayerName { get { return playerName; } set { playerName = value; } }
 
         public void Draw(T item)
         {

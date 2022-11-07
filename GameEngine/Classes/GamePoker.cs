@@ -49,7 +49,12 @@ namespace GameEngine.Classes
             for (int i = 0; i < numOfHands; i++)
                 hands[i] = new Hand<CardRecord>(arr[i], i + 1);
         }
-
+        public void Update(string nameOfSave)
+        {
+            IGameState gameState = new GameStateToDB(); //Method level scope
+            //Lägg till username och vilken hand de ska ha. Det sparas i GameUser
+            //Glöm inte att reverse db också.
+        }
         public void Save(string nameOfSave)
         {
             IGameState gameState = new GameStateToDB(); //Method level scope
