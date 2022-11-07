@@ -1,0 +1,98 @@
+﻿@page "/PokerGame"
+@using DataLayer;
+@using DataLayer.DTO;
+@using DataLayer.Interfaces;
+@using GameEngine.Classes;
+
+<h1>PokerGame</h1>
+<div class="highscore">
+    <p><b>Score card:</b></p>
+    <p>Player 1: @highScore[0]</p>
+    <p>Player 2: @highScore[1]</p>
+    <p>Player 3: @highScore[2]</p>
+    <p>Player 4: @highScore[3]</p>
+</div>
+<h2>Your hand (Player 1)</h2>
+
+@if(gameEnded == false)
+{
+    <p>Click on the card to throw it</p>
+    @foreach (var card in hand.ToList())
+    {
+        <a href="" @onclick="@(x=> ThrowCard(card.CardId))" @onclick:preventDefault><img class="pokercardimage" src="@GetFilePath(card.CardId)" /></a>
+    }
+    <br /><br />
+    <button @onclick="DrawToFiveCards">Draw to 5 cards</button>
+}
+else
+{
+    <button @onclick="NewGame">New Game</button>
+    @for (int i = 0; i < list.Count; i++)
+    {
+        <h2>Player @list[i].ID Score: @list[i].Score</h2>
+        foreach (var card in list[i].ToList())
+        {
+            <img class="pokercardimage" src="@GetFilePath(card.CardId)" />
+        }
+        <p></p>
+    }
+}
+
+@code {
+    public List<Hand<CardRecord>> list = new List<Hand<CardRecord>>();
+    public Deck<CardRecord> deck;
+    public Hand<CardRecord> hand;
+    public GamePoker game;
+    public bool gameEnded = false;
+    public List<int> highScore = new List<int>()
+    {
+        0,0,0,0
+    };
+
+    public void DrawToFiveCards()
+    {
+        for (int i = hand.Count; i < 5; i++)
+        {
+            if (deck.Count == 0)
+                break;
+            hand.Draw(deck.Draw());
+        }
+        gameEnded = true;
+        list = game.Winner();
+    }
+    protected override void OnInitialized()
+    {
+        PokerCards pc = new PokerCards();
+        ICardCommunicate com = new PokerCards();
+        List<CardRecord> tempList = com.GetCards();
+        GamePoker gc = new GamePoker(tempList, 4);
+        game = gc;
+        deck = gc.GetDeck;
+        hand = gc.GetHand(0);
+    }
+
+    public void ThrowCard(int id)
+    {
+        var card = hand.ToList().Where(x => x.CardId == id).First();
+        for (int i = 0; i < hand.Count; i++)
+        {
+            if (card.Equals(hand[i]))
+            {
+                hand.Throw(i);
+                break;
+            }
+        }
+    }
+    public void NewGame()
+    {
+        game.RestartGame();
+        deck = game.GetDeck;
+        hand = game.GetHand(0);
+        highScore[list[0].ID-1] += 1;
+        gameEnded = false;
+    }
+    public string GetFilePath(int id)
+    {
+        return "/PokerGame/" + id + ".jpg";
+    }
+}

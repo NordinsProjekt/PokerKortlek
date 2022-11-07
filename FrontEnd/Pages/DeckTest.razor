@@ -1,0 +1,80 @@
+﻿@page "/DeckTest"
+@using DataLayer;
+@using DataLayer.DTO;
+@using DataLayer.Interfaces;
+@using GameEngine.Classes;
+<h1>DeckTest</h1>
+
+<h2>All Cards in the deck</h2>
+<button @onclick="Shuffle">Shuffle</button><br />
+<button @onclick="CutTheDeck">Cut the deck</button><input type="number" @bind-value="CutIndex" />
+<br />
+<button @onclick="NewDeck">New</button>
+<button @onclick="Burn">Burn Cards</button><input type="number" @bind-value="BurnCards" /><br />
+<button @onclick="Draw">Draw a card</button>
+<br />
+
+@foreach (var card in deck.ToList())
+{
+    <img class="pokercardimage" src="@GetFilePath(card.CardId)" />
+}
+
+<h2>Draw pile</h2>
+@foreach (var card in drawList)
+{
+    <img class="pokercardimage" src="@GetFilePath(card.CardId)" />
+}
+
+@code {
+    public Deck<CardRecord> deck;
+    private List<CardRecord> drawList = new List<CardRecord>();
+    private int CutIndex { get; set; }
+    private int BurnCards { get; set; }
+    protected override void OnInitialized()
+    {
+        PokerCards pc = new PokerCards();
+        ICardCommunicate com = new PokerCards();
+        List<CardRecord> tempList = com.GetCards();
+        Deck<CardRecord> tempDeck = new Deck<CardRecord>(tempList);
+        deck = tempDeck;
+    }
+
+    public string GetFilePath(int id)
+    {
+        return "/PokerGame/" + id + ".jpg";
+    }
+
+    public void Shuffle()
+    {
+        deck.Shuffle();
+    }
+
+    public void CutTheDeck()
+    {
+        if (CutIndex >= deck.Count || CutIndex < 0)
+            return;
+        else
+            deck.CutTheDeck(CutIndex);
+    }
+
+    public void NewDeck()
+    {
+        deck.New();
+        drawList.Clear();
+    }
+
+    public void Burn()
+    {
+        if (BurnCards >= deck.Count || BurnCards < 0)
+            return;
+        else
+            deck.Burn(BurnCards);
+    }
+    public void Draw()
+    {
+        if (deck.Count == 0)
+            return;
+        else
+            drawList.Add(deck.Draw());
+    }
+}

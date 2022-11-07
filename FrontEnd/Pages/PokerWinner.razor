@@ -1,0 +1,50 @@
+﻿@page "/PokerWinner"
+@using DataLayer;
+@using DataLayer.DTO;
+@using DataLayer.Interfaces;
+@using GameEngine.Classes;
+
+<h1>Poker</h1>
+
+@for (int i = 0; i < list.Count; i++)
+{
+    <h2>Player @list[i].ID Score: @list[i].Score</h2>
+    foreach (var card in list[i].ToList())
+    {
+        <img class="pokercardimage" src="@GetFilePath(card.CardId)" />
+    }
+    <p></p>
+}
+<button @onclick="DrawACard">
+    Draw a Card
+</button>
+<h2>Cards that you have pulled from the deck</h2>
+@foreach (var card in playerDraw)
+{
+    <img class="pokercardimage" src="@GetFilePath(card.CardId)" />
+}
+@code {
+    public List<Hand<CardRecord>> list = new List<Hand<CardRecord>>();
+    public Deck<CardRecord> deck;
+    public List<CardRecord> playerDraw = new List<CardRecord>();
+
+    public void DrawACard()
+    {
+        if (deck.Count != 0)
+            playerDraw.Add(deck.Draw());
+    }
+    protected override void OnInitialized()
+    {
+        PokerCards pc = new PokerCards();
+        ICardCommunicate com = new PokerCards();
+        List<CardRecord> tempList = com.GetCards();
+        GamePoker gc = new GamePoker(tempList, 4);
+        deck = gc.GetDeck;
+        list = gc.Winner();
+    }
+
+    public string GetFilePath(int id)
+    {
+        return "/PokerGame/" + id + ".jpg";
+    }
+}

@@ -1,0 +1,153 @@
+﻿@using DataLayer.DTO
+@using Classes;
+@using GameEngine.Classes;
+@using Microsoft.AspNetCore.SignalR.Client;
+@page "/PokerOnline";
+@inject NavigationManager Navigation
+@inject PokerWrapper game;
+@implements IAsyncDisposable
+
+<PageTitle>Online Poker</PageTitle>
+@if (connected == false)
+{
+    <button @onclick="ClickJoin">Join PokerGame</button>
+}
+@if (connected == true)
+{
+    <p>Connected to PokerRoom</p>
+    //TODO
+    //Render hand
+    //Lägg till möjlighet att kasta kort och stanna.
+    <h1>PokerGame</h1>
+    <div class="highscore">
+        <p><b>Score card:</b></p>
+        <p>Player 1: @highScore[0]</p>
+        <p>Player 2: @highScore[1]</p>
+    </div>
+    <h2>Your hand (Player @playerId)</h2>
+
+    @if (gameEnded == false)
+    {
+        @if (newGame)
+        {
+            <p>Click on the card to throw it</p>
+            @foreach (var card in hand.ToList())
+            {
+                <a href="" @onclick="@(x=> ThrowCard(card.CardId))" @onclick:preventDefault><img class="pokercardimage" src="@GetFilePath(card.CardId)" /></a>
+            }
+            <br />
+            <br />
+            <button @onclick="GetNewCards">Draw to 5 cards</button>
+        }
+        else
+        {
+            <p>Waiting for another player</p>
+        }
+
+    }
+    else
+    {
+        <button @onclick="NewGame">New Game</button>
+@*        @for (int i = 0; i < list.Count; i++)
+        {
+            <h2>Player @list[i].ID Score: @list[i].Score</h2>
+            foreach (var card in list[i].ToList())
+            {
+                <img class="pokercardimage" src="@GetFilePath(card.CardId)" />
+            }
+            <p></p>
+        }*@
+    }
+}
+
+
+@code {
+    private HubConnection? hubConnection;
+    private Hand<CardRecord> player;
+    private bool connected = false;
+    public Hand<CardRecord> hand;
+    public bool gameEnded = false;
+    public bool newGame = false;
+    private int playerId = 0;
+    public List<int> highScore = new List<int>()
+    {
+        0,0
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/PokerRoom"))
+            .Build();
+
+        hubConnection.On<Hand<CardRecord>>("SendHand", (hand) =>
+        {
+            this.hand = hand;
+        });
+
+        hubConnection.On<bool,int>("JoinRoom", async (con,number)=>{
+            if (con)
+            {
+                this.connected = true;
+                playerId = number;
+                await hubConnection.SendAsync("DealCards");
+                StateHasChanged();
+            }
+            else
+            {
+                Navigation.NavigateTo("/RoomFull");
+            }
+        });
+
+        hubConnection.On<bool>("StartGame", (start) =>
+        {
+            newGame = true;
+            StateHasChanged();
+        });
+
+        await hubConnection.StartAsync();
+    }
+    private async Task ClickJoin()
+    {
+        await hubConnection.SendAsync("Join",game);
+    }
+
+    private async Task GetNewCards()
+    {
+        await hubConnection.SendAsync("GiveMeCards", 5 - hand.Count,playerId,game);
+    }
+
+    public bool IsConnected =>
+        hubConnection?.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
+
+    public string GetFilePath(int id)
+    {
+        return "/PokerGame/" + id + ".jpg";
+    }
+
+    public void ThrowCard(int id)
+    {
+        var card = hand.ToList().Where(x => x.CardId == id).First();
+        for (int i = 0; i < hand.Count; i++)
+        {
+            if (card.Equals(hand[i]))
+            {
+                hand.Throw(i);
+                break;
+            }
+        }
+    }
+
+    public void NewGame()
+    {
+        gameEnded = false;
+    }
+}
