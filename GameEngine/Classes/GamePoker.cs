@@ -64,7 +64,16 @@ namespace GameEngine.Classes
             List<CardRecord> deckList = carddeck.ToList();
             List<CardRecord> orgDeckList = carddeck.GetSeedList();
             GameStateRecord gsr = new GameStateRecord(handList,deckList,orgDeckList);
-            gameState.SaveGameState(gsr,nameOfSave);
+            try
+            {
+                gameState.SaveGameState(gsr, nameOfSave);
+            }
+            catch (System.Exception ex)
+            {
+                throw new System.Exception(ex.Message);
+                throw new GameException("Något gick fel med sparningen av GameState");
+            }
+
         }
 
         public void Load(string nameOfSave)

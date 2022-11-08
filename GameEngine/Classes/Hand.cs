@@ -20,6 +20,7 @@ namespace GameEngine.Classes
                 throw new HandException("You cant have more than 5 items");
             this.list = list;
             this.id = id;
+            playerName = "Player " + (id + 1);
         }
         public T this[int index]
         {
