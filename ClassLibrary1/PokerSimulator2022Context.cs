@@ -20,8 +20,10 @@ namespace Database
 
         public virtual DbSet<Cards> Cards { get; set; }
         public virtual DbSet<Game> Game { get; set; }
+        public virtual DbSet<GameUser> GameUser { get; set; }
         public virtual DbSet<Location> Location { get; set; }
         public virtual DbSet<Save> Save { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -52,6 +54,23 @@ namespace Database
                     .HasMaxLength(50);
 
                 entity.Property(e => e.Start).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<GameUser>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.HasOne(d => d.Game)
+                    .WithMany(p => p.GameUser)
+                    .HasForeignKey(d => d.GameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_GameId_Game_GameUser");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.GameUser)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserId_Game_GameUser");
             });
 
             modelBuilder.Entity<Location>(entity =>
@@ -90,6 +109,15 @@ namespace Database
                     .HasForeignKey(d => d.LocationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_LocationID_Location");
+            });
+
+            modelBuilder.Entity<Users>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Username)
+                    .IsRequired()
+                    .HasMaxLength(50);
             });
 
             OnModelCreatingPartial(modelBuilder);

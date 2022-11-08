@@ -5,19 +5,16 @@ using System.Collections.Generic;
 
 namespace Database
 {
-    public partial class Game
+    public partial class Users
     {
-        public Game()
+        public Users()
         {
             GameUser = new HashSet<GameUser>();
-            Save = new HashSet<Save>();
         }
 
         public int Id { get; set; }
-        public string Name { get; set; }
-        public DateTime Start { get; set; }
+        public string Username { get; set; }
 
         public virtual ICollection<GameUser> GameUser { get; set; }
-        public virtual ICollection<Save> Save { get; set; }
     }
 }
