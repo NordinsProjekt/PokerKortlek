@@ -74,3 +74,30 @@ a, .btn-link {
     border: 2px dashed black;
     margin-bottom: 10px;
 }
+
+.PokerHeader {
+    text-align: center;
+}
+.PokerNav {
+
+}
+
+.PokerNav {
+    overflow: hidden;
+    background-color: #333;
+    font-family: Arial;
+}
+
+    /* Links inside the navbar */
+.PokerNav a {
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.PokerNav a:hover, .dropdown:hover .dropbtn {
+    background-color: goldenrod;
+}
