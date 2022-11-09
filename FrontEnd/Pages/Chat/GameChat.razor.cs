@@ -1,10 +1,7 @@
-﻿using Blazor_UI.Data;
-//using Buffert;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.SignalR.Client;
+﻿using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.JSInterop;
 
-namespace FrontEnd.Pages
+namespace FrontEnd.Pages.Chat
 {
     public partial class GameChat
     {
@@ -22,7 +19,7 @@ namespace FrontEnd.Pages
 
         // list of messages in chat
         private List<Message> _messages = new List<Message>();
-        private string _hubUrl;
+        private List<string> _users = new List<string>();
         private HubConnection _hubConnection;
 
         public async Task Chat()
@@ -34,24 +31,27 @@ namespace FrontEnd.Pages
                 if (_username == "") throw new Exception("Behöver ett användarnamn");
                 //_username = _login.GetUserName();
                 _isChatting = true;
+                
                 await Task.Delay(1);
 
                 // remove old messages if any
+                // remove old users
                 _messages.Clear();
+                _users.Clear();
+                _users.Add(_username);
 
                 //-- Ny metod för lättare läst kod.
                 // Create the chat client
                 string baseUrl = navigationManager.BaseUri;
 
-                _hubUrl = baseUrl.TrimEnd('/') + GameHub.HubUrl;
-
                 _hubConnection = new HubConnectionBuilder()
-                    .WithUrl(_hubUrl)
+                    .WithUrl(navigationManager.ToAbsoluteUri("/GameHub"))
                     .Build();
 
                 _hubConnection.On<string, string>("Broadcast", BroadcastMessage);
                 _hubConnection.On("Refresh", UpdateClient);
                 _hubConnection.On("AnswerCall", PingServer);
+                _hubConnection.On<string>("RemoveUser", RemoveClient);
 
                 await _hubConnection.StartAsync();
                 await SendAsync($"[Notice] {_username} joined chat room.");
@@ -68,25 +68,33 @@ namespace FrontEnd.Pages
         {
             bool isMine = name.Equals(_username, StringComparison.OrdinalIgnoreCase);
             _messages.Add(new Message(name, message, isMine));
+            if (_users.Contains(name) == false && name != "System")
+                _users.Add(name);
             // Inform blazor the UI needs updating
             StateHasChanged();
             ScrollIt();
         }
 
-        private async void PingServer()
+        //private async void PingServer()
+        //{
+        //    await _hubConnection.SendAsync("ReportingBack");
+        //}
+
+        private async void RemoveClient(string username)
         {
-            await _hubConnection.SendAsync("ReportingBack");
+            _users.Remove(username);
         }
 
         private async Task UpdateMood(string mood)
         {
-            await _hubConnection.SendAsync("SendMood", _username, mood);
+            await _hubConnection.SendAsync("Broadcast", "System", _username + " is " + mood);
         }
         private async Task DisconnectAsync()
         {
             if (_isChatting)
             {
                 await SendAsync($"[Notice] {_username} left chat room.");
+                await _hubConnection.SendAsync("ClientLoggingOff", _username);
                 await _hubConnection.StopAsync();
                 await _hubConnection.DisposeAsync();
                 _hubConnection = null;

@@ -38,6 +38,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.MapBlazorHub();
+app.MapHub<GameHub>("/GameHub");
 app.MapHub<ChatRoom>("/ChatRoom");
 app.MapHub<PokerRoom>("/PokerRoom");
 app.MapFallbackToPage("/_Host");

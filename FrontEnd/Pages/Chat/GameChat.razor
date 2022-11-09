@@ -2,6 +2,7 @@
 @inject NavigationManager navigationManager
 @inject IJSRuntime JS
 @using Microsoft.AspNetCore.SignalR.Client;
+@using FrontEnd.Hubs;
 
 <h2>Pre-game chat</h2>
 <hr />
@@ -53,8 +54,8 @@ else
         </div>
         <div class="userlist">
             <b>Userlist</b><br />
-            <P>Users online: @_gameroom.UserCount()</P>
-            @foreach (var gamer in _gameroom.GetAllUsers)
+            <P>Users online: @_users.Count</P>
+            @foreach (var gamer in _users.ToList())
             {
                 @gamer.ToString();<br />
             }
@@ -66,4 +67,7 @@ else
         <button @onclick="@(() => SendAsync(_newMessage))">Send</button>
     </div>
 
+}
+@code {
+    
 }

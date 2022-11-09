@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.SignalR;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 
-namespace Blazor_UI.Data
+namespace FrontEnd.Hubs
 {
     public class GameHub : Hub
     {
@@ -21,28 +21,31 @@ namespace Blazor_UI.Data
             await Clients.All.SendAsync("Refresh");
         }
 
-        public async Task ReportBack()
-        {
-            await Clients.All.SendAsync("AnswerCall");
-            //Kanske tar bort folk för tidigt.
-            //Kommer fortfarande vara kvar i chatten, men inte synas i listan.
-            //_userlist.RemoveAllUsersThatDidntAnswer();
-        }
+        //public async Task ReportBack()
+        //{
+        //    await Clients.All.SendAsync("AnswerCall");
+        //    //Kanske tar bort folk för tidigt.
+        //    //Kommer fortfarande vara kvar i chatten, men inte synas i listan.
+        //    //_userlist.RemoveAllUsersThatDidntAnswer();
+        //}
 
-        public void ReportingIn()
-        {
-           //_userlist.UserIsStillConnected(Context.ConnectionId);
-        }
+        //public void ReportingIn()
+        //{
+        //   //_userlist.UserIsStillConnected(Context.ConnectionId);
+        //}
 
         public override async Task OnConnectedAsync()
         {
-            Console.WriteLine($"{Context.ConnectionId} connected");
+            //Console.WriteLine($"{Context.ConnectionId} connected");
             await  base.OnConnectedAsync();
         }
-
+        public async Task ClientLoggingOff(string username)
+        {
+            await Clients.Others.SendAsync("RemoveUser",username);
+        }
         public override async Task OnDisconnectedAsync(Exception e)
         {
-            Console.WriteLine($"Disconnected {e?.Message} {Context.ConnectionId}");
+            //Console.WriteLine($"Disconnected {e?.Message} {Context.ConnectionId}");
             //_userlist.RemoveUser(Context.ConnectionId);
             await Clients.Others.SendAsync("Refresh");
             await base.OnDisconnectedAsync(e);
