@@ -16,6 +16,10 @@ namespace DataLayer
             if (ps.Game.Where(x => x.Name == nameOfSave).Any())
             {
                 Game g = ps.Game.Where(x=>x.Name == nameOfSave).First();
+                foreach (var item in ps.GameUser.Where(x=>x.GameId == g.Id).ToList())
+                {
+                    ps.Remove(item);
+                }
                 ps.Remove(g);
                 ps.SaveChanges();
             }
