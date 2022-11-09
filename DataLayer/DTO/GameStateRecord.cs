@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DataLayer.DTO
 {
     public sealed record GameStateRecord(
-            List<List<CardRecord>> Hands,
+            List<HandRecord> Hands,
             List<CardRecord> Deck, 
             List<CardRecord>DeckOrgState
         );

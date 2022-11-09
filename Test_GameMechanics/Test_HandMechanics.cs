@@ -146,9 +146,9 @@
                 list.Add(deck.Draw());
             }
             //ID+1 so Default name is Player 1 if index = 0
-            Hand<CardRecord> hand1 = new Hand<CardRecord>(list, 0);
-            Hand<CardRecord> hand2 = new Hand<CardRecord>(list, 1);
-            Hand<CardRecord> hand4 = new Hand<CardRecord>(list, 3);
+            Hand<CardRecord> hand1 = new Hand<CardRecord>(list, 1);
+            Hand<CardRecord> hand2 = new Hand<CardRecord>(list, 2);
+            Hand<CardRecord> hand4 = new Hand<CardRecord>(list, 4);
             Assert.IsTrue(hand1.PlayerName == "Player 1");
             Assert.IsTrue(hand2.PlayerName == "Player 2");
             Assert.IsTrue(hand4.PlayerName == "Player 4");

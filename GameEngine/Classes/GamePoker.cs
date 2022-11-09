@@ -58,9 +58,15 @@ namespace GameEngine.Classes
         public void Save(string nameOfSave)
         {
             IGameState gameState = new GameStateToDB(); //Method level scope
-            List<List<CardRecord>> handList = new List<List<CardRecord>>();
+            List<HandRecord> handList = new List<HandRecord>();
             for (int i = 0; i < hands.Length; i++)
-                handList.Add(hands[i].ToList());
+            {
+                HandRecord hand = new HandRecord(hands[i].ToList(), hands[i].PlayerName, hands[i].ID);
+                handList.Add(hand);
+            }
+            //List<List<CardRecord>> handList = new List<List<CardRecord>>();
+            //for (int i = 0; i < hands.Length; i++)
+            //    handList.Add(hands[i].ToList());
             List<CardRecord> deckList = carddeck.ToList();
             List<CardRecord> orgDeckList = carddeck.GetSeedList();
             GameStateRecord gsr = new GameStateRecord(handList,deckList,orgDeckList);
@@ -93,11 +99,17 @@ namespace GameEngine.Classes
             FillDeck(state.Deck,state.DeckOrgState);
         }
 
-        private void FillHands(List<List<CardRecord>> list)
+        //private void FillHands(List<List<CardRecord>> list)
+        //{
+        //    hands = new Hand<CardRecord>[list.Count];
+        //    for (int i = 0; i < list.Count; i++)
+        //        hands[i] = new Hand<CardRecord>(list[i], i + 1);
+        //}
+        private void FillHands(List<HandRecord> list)
         {
             hands = new Hand<CardRecord>[list.Count];
             for (int i = 0; i < list.Count; i++)
-                hands[i] = new Hand<CardRecord>(list[i], i + 1);
+                hands[i] = new Hand<CardRecord>(list[i].CardList, i + 1);
         }
         private void FillDeck(List<CardRecord> deck,List<CardRecord> seedDeck)
         {
