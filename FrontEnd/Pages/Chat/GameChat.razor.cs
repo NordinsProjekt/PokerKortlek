@@ -29,7 +29,6 @@ namespace FrontEnd.Pages.Chat
                 //Ny metod för lättare läst kod.
                 // Start chatting and force refresh UI.
                 if (_username == "") throw new Exception("Behöver ett användarnamn");
-                //_username = _login.GetUserName();
                 _isChatting = true;
                 
                 await Task.Delay(1);
@@ -50,7 +49,7 @@ namespace FrontEnd.Pages.Chat
 
                 _hubConnection.On<string, string>("Broadcast", BroadcastMessage);
                 _hubConnection.On("Refresh", UpdateClient);
-                _hubConnection.On("AnswerCall", PingServer);
+               // _hubConnection.On("AnswerCall", PingServer);
                 _hubConnection.On<string>("RemoveUser", RemoveClient);
 
                 await _hubConnection.StartAsync();

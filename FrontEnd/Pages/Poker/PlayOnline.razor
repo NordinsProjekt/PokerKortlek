@@ -10,6 +10,12 @@
 <PageTitle>Online Poker</PageTitle>
 @if (connected == false)
 {
+    <div class="form-group">
+        <label>
+            RoomName:
+            <input @bind="_roomName" />
+        </label>
+    </div>
     <button @onclick="ClickJoin">Join PokerGame</button>
 }
 @if (connected == true)
@@ -69,6 +75,7 @@
     public bool gameEnded = false;
     public bool newGame = false;
     private int playerId = 0;
+    private string _roomName = "";
     public List<int> highScore = new List<int>()
     {
         0,0
@@ -109,6 +116,7 @@
     }
     private async Task ClickJoin()
     {
+        PokerWrapper game = new PokerWrapper();
         await hubConnection.SendAsync("Join",game);
     }
 
