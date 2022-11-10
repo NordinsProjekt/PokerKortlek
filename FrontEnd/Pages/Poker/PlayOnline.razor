@@ -117,12 +117,16 @@
     private async Task ClickJoin()
     {
         PokerWrapper game = new PokerWrapper();
-        await hubConnection.SendAsync("Join",game);
+        bool worked = game.Save(_roomName);
+        if (worked)
+            await hubConnection.SendAsync("Join",game);
+        else
+            Navigation.NavigateTo("/RoomFull");
     }
 
     private async Task GetNewCards()
     {
-        await hubConnection.SendAsync("GiveMeCards", 5 - hand.Count,playerId,game);
+        await hubConnection.SendAsync("GetCards", 5 - hand.Count, game);
     }
 
     public bool IsConnected =>

@@ -11,4 +11,44 @@
         var objDiv = document.getElementById("scrollbox");
         objDiv.scrollTop = objDiv.scrollHeight;
     }
+
+    function make_paragraph(text)
+    {
+        var objP = document.getElementsByTagName("p")[0];
+        objP.innerHTML = text;
+    }
+
+    function make_heading(tag,text)
+    {
+        var heading = "<"+tag+">"+text+"</"+tag+">";
+        return heading;
+    }
+
+    function CalculateSum(arr)
+    {
+        var sum = 0;
+        while(arr.length > 0)
+        {
+            sum+=arr.pop();
+        }
+        return sum;
+    }
+
+    function GenerateListOfNumbers(start,end)
+    {
+        var text = "";
+        for (let i = start;i<=end;i++)
+        {
+            text+= i+"<br />";
+        }
+        return text;
+    }
+    function DrawRedBox()
+    {
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#FF0000";
+        ctx.fillRect(0, 0, 150, 75);
+    }
+
 </script>

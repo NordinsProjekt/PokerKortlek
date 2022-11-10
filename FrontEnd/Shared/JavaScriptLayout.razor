@@ -1,0 +1,21 @@
+﻿@inherits LayoutComponentBase
+
+<header>
+    <nav class="PokerNav">
+        <a href="/Javascript">Basic Example</a>
+        <a href="/JavaScript/JSDrawings">Drawings Example</a>
+        <a href="/Poker/PokerGame">Singleplayer Game of Poker</a>
+    </nav>
+</header>
+<main>
+    <h1 class="PokerHeader">JavaScript Example</h1>
+    @Body
+</main>
+<footer>
+    @TrademarkMessage
+</footer>
+
+@code {
+    public string TrademarkMessage { get; set; } =
+        "Testkod som har skapats för övningar/tentor för Backendutveckling";
+}

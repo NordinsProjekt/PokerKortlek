@@ -10,7 +10,7 @@ namespace FrontEnd.Hubs
 {
     public class PokerRoom : Hub
     {
-        public async Task Join(PokerWrapper game)
+        public async Task Join(PokerWrapper game,int playerId)
         {
             if (game.playerList.Count <=2 && game.playerList.Contains(Context.ConnectionId) == false)
             {
@@ -19,9 +19,7 @@ namespace FrontEnd.Hubs
                 await Clients.Caller.SendAsync("JoinRoom", true, game.playerList.Count);
                 await Clients.Caller.SendAsync("SendHand", game.GetHand(game.playerList.Count - 1));
                 if (game.playerList.Count == 2)
-                {
                     await Clients.All.SendAsync("StartGame", true);
-                }
             }
             else
             {
@@ -29,12 +27,13 @@ namespace FrontEnd.Hubs
             }
         }
         
-        public async Task GetCards(int numOfCards,string player,PokerWrapper game)
+        public async Task GetCards(int numOfCards, PokerWrapper game)
         {
-            int x = numOfCards;
-            string t = player;
-            List<CardRecord> newCards = new List<CardRecord>();
-            await Clients.All.SendAsync("DealCards",newCards);
+            List<CardRecord> cards = new List<CardRecord>();
+            var deck = game.GetDeck();
+            for (int i = 0; i < numOfCards; i++)
+                cards.Add(deck.Draw());
+            await Clients.Caller.SendAsync("DealCards",cards);
         }
 
         public async Task SendMessage(string user, string message)
