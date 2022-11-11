@@ -6,6 +6,9 @@
 <h2>Example 1 - Draw Red Box</h2>
 <canvas id="myCanvas"></canvas>
 
+<h2>Example 1 - Rectangle</h2>
+<canvas id="myRectangle"></canvas>
+
 <h2>Example 2 - Draw Red Circle</h2>
 <canvas id="myCircle"></canvas>
 
@@ -14,6 +17,9 @@
 
 <h2>Example 4 - Triangle</h2>
 <canvas id="myTriangle"></canvas>
+
+<h2>Example 6 - Circle</h2>
+<canvas id="myArcCanvas" height="500px" width="500px"></canvas>
 @code {
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -21,5 +27,7 @@
         await JS.InvokeVoidAsync("DrawRedCircle");
         await JS.InvokeVoidAsync("DrawTwoBoxes");
         await JS.InvokeVoidAsync("DrawTriangle");
+        await JS.InvokeVoidAsync("DrawArcs");
+        await JS.InvokeVoidAsync("DrawRectangle");
     }
 }
