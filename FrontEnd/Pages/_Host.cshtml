@@ -48,7 +48,40 @@
         var canvas = document.getElementById("myCanvas");
         var ctx = canvas.getContext("2d");
         ctx.fillStyle = "#FF0000";
-        ctx.fillRect(0, 0, 150, 75);
+        ctx.fillRect(0, 0, 150, 150);
     }
+
+    function DrawRedCircle()
+    {
+        var canvas = document.getElementById("myCircle");
+        var ctx = canvas.getContext("2d");
+        ctx.strokeStyle = "#FF0000";
+        ctx.arc(75,75,35,0,Math.PI*2);
+        ctx.stroke();
+    }
+
+    function DrawTwoBoxes() {
+        let canvas = document.getElementById("myTwoBoxes");
+        let ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#FF0000";
+        ctx.fillRect(0, 0, 100, 100);
+        ctx.globalAlpha = 0.5;
+        ctx.fillStyle = "#0066FF";
+        ctx.fillRect(40, 40, 100, 100);
+    }
+
+    function DrawTriangle()
+    {
+        let canvas = document.getElementById("myTriangle");
+        let ctx = canvas.getContext("2d");
+        ctx.beginPath();
+        ctx.moveTo(10, 0);
+        ctx.lineTo(10, 100);
+        ctx.lineTo(100, 100);
+        ctx.fill();
+        ctx.stroke();
+    }
+
+
 
 </script>

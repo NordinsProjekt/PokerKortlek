@@ -3,6 +3,23 @@
 @layout JavaScriptLayout
 <h1>JS Drawings</h1>
 
-@code {
+<h2>Example 1 - Draw Red Box</h2>
+<canvas id="myCanvas"></canvas>
 
+<h2>Example 2 - Draw Red Circle</h2>
+<canvas id="myCircle"></canvas>
+
+<h2>Example 3 - Draw Two Intersecting Rectangles</h2>
+<canvas id="myTwoBoxes"></canvas>
+
+<h2>Example 4 - Triangle</h2>
+<canvas id="myTriangle"></canvas>
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JS.InvokeVoidAsync("DrawRedBox");
+        await JS.InvokeVoidAsync("DrawRedCircle");
+        await JS.InvokeVoidAsync("DrawTwoBoxes");
+        await JS.InvokeVoidAsync("DrawTriangle");
+    }
 }
