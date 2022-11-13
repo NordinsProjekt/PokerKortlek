@@ -30,7 +30,11 @@
         <p>Player 1: @highScore[0]</p>
         <p>Player 2: @highScore[1]</p>
     </div>
-    <h2>Your hand (Player @playerId)</h2>
+    @foreach (var item in game.playerList)
+    {
+        <p>@item</p>
+    }
+    <h2>Your hand (Player (@playerId+1))</h2>
 
     @if (gameEnded == false)
     {
@@ -49,27 +53,16 @@
         {
             <p>Waiting for another player</p>
         }
-
     }
     else
     {
-        <button @onclick="NewGame">New Game</button>
-@*        @for (int i = 0; i < list.Count; i++)
-        {
-            <h2>Player @list[i].ID Score: @list[i].Score</h2>
-            foreach (var card in list[i].ToList())
-            {
-                <img class="pokercardimage" src="@GetFilePath(card.CardId)" />
-            }
-            <p></p>
-        }*@
+        <p>Player (@game.WinningHand()+1)</p>
     }
 }
 
 
 @code {
     private HubConnection? hubConnection;
-    private Hand<CardRecord> player;
     private bool connected = false;
     public Hand<CardRecord> hand;
     public bool gameEnded = false;
@@ -87,9 +80,11 @@
             .WithUrl(Navigation.ToAbsoluteUri("/PokerRoom"))
             .Build();
 
-        hubConnection.On<Hand<CardRecord>>("SendHand", (hand) =>
+        hubConnection.On("NewGame", () =>
         {
-            this.hand = hand;
+            newGame = true;
+            hand = game.GetHand(playerId);
+            StateHasChanged();
         });
 
         hubConnection.On<bool,int>("JoinRoom", async (con,number)=>{
@@ -109,24 +104,54 @@
         hubConnection.On<bool>("StartGame", (start) =>
         {
             newGame = true;
+            hand = game.GetHand(playerId);
+            game.Save();
             StateHasChanged();
         });
 
+        hubConnection.On<List<CardRecord>>("DealCards", (list) =>
+        {
+            foreach (var card in list)
+            {
+                hand.Draw(card);
+            }
+            game.Update();
+        });
         await hubConnection.StartAsync();
     }
     private async Task ClickJoin()
     {
-        PokerWrapper game = new PokerWrapper();
-        bool worked = game.Save(_roomName);
-        if (worked)
-            await hubConnection.SendAsync("Join",game);
+        if (hubConnection == null)
+            throw new Exception("HubConnection failed");
+        playerId = game.JoinRoom(_roomName);
+        if (playerId != -1)
+        {
+            connected = true;
+            if (playerId == 1)
+            {
+                await hubConnection.InvokeAsync("StartGame");
+            }
+            
+        }
         else
-            Navigation.NavigateTo("/RoomFull");
+            Navigation.NavigateTo("/Poker/RoomFull");
+        StateHasChanged();
     }
 
-    private async Task GetNewCards()
+    private void GetNewCards()
     {
-        await hubConnection.SendAsync("GetCards", 5 - hand.Count, game);
+        int cardNeeded = 5 - hand.Count;
+        for (int i = 0; i < cardNeeded; i++)
+        {
+            hand.Draw(game.GetDeck().Draw());
+        }
+        game.playerList[playerId].DrawnCards = true;
+        var result = game.playerList.Where(x => x.DrawnCards == true).Count();
+        if (result == 2)
+        {
+            gameEnded = true;
+        }
+        StateHasChanged();
     }
 
     public bool IsConnected =>
@@ -137,6 +162,7 @@
         if (hubConnection is not null)
         {
             await hubConnection.DisposeAsync();
+            throw new Exception("Stupid hub Disposed");
         }
     }
 
@@ -156,10 +182,5 @@
                 break;
             }
         }
-    }
-
-    public void NewGame()
-    {
-        gameEnded = false;
     }
 }

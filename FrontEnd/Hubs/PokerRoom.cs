@@ -10,21 +10,25 @@ namespace FrontEnd.Hubs
 {
     public class PokerRoom : Hub
     {
-        public async Task Join(PokerWrapper game,int playerId)
+        //public async Task Join(PokerWrapper game)
+        //{
+        //    if (game.playerList.Count <=2 && game.playerList.Contains(Context.ConnectionId) == false)
+        //    {
+        //        game.playerList.Add(Context.ConnectionId);
+        //        Console.WriteLine(Context.ConnectionId);
+        //        await Clients.Caller.SendAsync("JoinRoom", true, game.playerList.Count);
+        //        await Clients.Caller.SendAsync("SendHand", game.GetHand(game.playerList.Count - 1));
+        //        if (game.playerList.Count == 2)
+        //            await Clients.All.SendAsync("StartGame", true);
+        //    }
+        //    else
+        //    {
+        //        await Clients.Caller.SendAsync("JoinRoom", false,0);
+        //    }
+        //}
+        public async Task StartGame()
         {
-            if (game.playerList.Count <=2 && game.playerList.Contains(Context.ConnectionId) == false)
-            {
-                game.playerList.Add(Context.ConnectionId);
-                Console.WriteLine(Context.ConnectionId);
-                await Clients.Caller.SendAsync("JoinRoom", true, game.playerList.Count);
-                await Clients.Caller.SendAsync("SendHand", game.GetHand(game.playerList.Count - 1));
-                if (game.playerList.Count == 2)
-                    await Clients.All.SendAsync("StartGame", true);
-            }
-            else
-            {
-                await Clients.Caller.SendAsync("JoinRoom", false,0);
-            }
+            await Clients.All.SendAsync("NewGame");
         }
         
         public async Task GetCards(int numOfCards, PokerWrapper game)

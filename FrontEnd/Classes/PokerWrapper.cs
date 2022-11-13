@@ -9,29 +9,51 @@ namespace FrontEnd.Classes
     public class PokerWrapper
     {
         private GamePoker poker;
-        public List<string> playerList = new List<string>();
+        public List<Player> playerList = new List<Player>();
+        public string roomName = "";
         public PokerWrapper()
         {
             ICardCommunicate ipc = new PokerCards();
             poker = new GamePoker(ipc.GetCards(), 2);
         }
-        public bool Save(string name)
+        public int JoinRoom(string room)
         {
-            try
+            if (playerList.Count > 2) { return -1; }
+            if (roomName == "")
             {
-                poker.Save(name);
+                roomName = room;
+                playerList.Add(new Player() { Id = 0, Name = "Player 1", Waiting = true});
+                return 0;
             }
-            catch (Exception)
+            else
             {
-                return false;
-            }
-            return true;
+                playerList.Add(new Player() { Id = 1, Name = "Player 2", Waiting = true });
+                return 1;
+            }       
         }
-        public bool Update(string name)
+        public bool Save()
+        {
+            if (playerList.Count() == 2)
+            {
+                try
+                {
+                    poker.Save(roomName);
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                return true;
+            }
+            return false;
+
+            
+        }
+        public bool Update()
         {
             try
             {
-                poker.Update(name);
+                poker.Update(roomName);
             }
             catch (Exception)
             {
