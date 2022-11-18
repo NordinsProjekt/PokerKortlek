@@ -64,5 +64,29 @@ namespace FrontEnd.Classes
         public Hand<CardRecord> GetHand(int index) => poker.GetHand(index);
         public Deck<CardRecord> GetDeck() => poker.GetDeck;
         public int WinningHand() => poker.Winner().First().ID;
+
+        public void RestorePlayer(int id)
+        {
+            playerList[id].DrawnCards = false;
+            playerList[id].Waiting = false;
+        }
+
+        public void ShuffleAndDeal()
+        {
+            poker.RestartGame();
+        }
+
+        public void LeaveGame(int id)
+        {
+            Player player = playerList.Where(x=>x.Id== id).FirstOrDefault();
+            if (player != null)
+            {
+                playerList.Remove(player);
+            }
+            else
+            {
+                throw new Exception("Player doesnt exist");
+            }
+        }
     }
 }

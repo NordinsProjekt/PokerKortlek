@@ -32,14 +32,14 @@
     </div>
     @foreach (var item in game.playerList)
     {
-        <p>@item</p>
+        <p>@item.Name</p>
     }
-    <h2>Your hand (Player (@playerId+1))</h2>
-
+  
     @if (gameEnded == false)
     {
         @if (newGame)
         {
+            <h2>Your hand (Player @(playerId + 1))</h2>
             <p>Click on the card to throw it</p>
             @foreach (var card in hand.ToList())
             {
@@ -47,7 +47,12 @@
             }
             <br />
             <br />
-            <button @onclick="GetNewCards">Draw to 5 cards</button>
+            <button @onclick="GetNewCards">
+                @if (hand.Count == 5)
+                    @($"Keep Hand")
+                else
+                   @($"Draw to 5 cards")
+            </button>
         }
         else
         {
@@ -56,7 +61,28 @@
     }
     else
     {
-        <p>Player (@game.WinningHand()+1)</p>
+        <h2>Your hand (Player @(playerId+1))</h2>
+        <p>Click on the card to throw it</p>
+        @foreach (var card in hand.ToList())
+        {
+            <img class="pokercardimage" src="@GetFilePath(card.CardId)" />
+        }
+        <br />
+        <br />
+        <h2>Player @game.WinningHand() won</h2>
+        @for (int i = 0; i < 2; i++)
+        {
+            <h3>Player @(i+1)</h3>
+            var playerHand = game.GetHand(i);
+            @foreach (var card in playerHand.ToList())
+            {
+                <img class="pokercardimage" src="@GetFilePath(card.CardId)" />
+            }
+        }
+        <br />
+        <button class="btn-primary" @onclick="PlayAgain">Play Again?</button>
+        <button class="btn-primary" @onclick="Disconnect">Exit</button>
+
     }
 }
 
@@ -87,36 +113,20 @@
             StateHasChanged();
         });
 
-        hubConnection.On<bool,int>("JoinRoom", async (con,number)=>{
-            if (con)
-            {
-                this.connected = true;
-                playerId = number;
-                await hubConnection.SendAsync("DealCards");
-                StateHasChanged();
-            }
-            else
-            {
-                Navigation.NavigateTo("/RoomFull");
-            }
-        });
-
-        hubConnection.On<bool>("StartGame", (start) =>
+        hubConnection.On("EndGame", () =>
         {
-            newGame = true;
-            hand = game.GetHand(playerId);
-            game.Save();
+            newGame = false;
+            gameEnded = true;
+            game.RestorePlayer(playerId);
             StateHasChanged();
         });
 
-        hubConnection.On<List<CardRecord>>("DealCards", (list) =>
+        hubConnection.On("UpdateScore", () =>
         {
-            foreach (var card in list)
-            {
-                hand.Draw(card);
-            }
-            game.Update();
+            highScore[game.WinningHand() - 1] += 1;
+            StateHasChanged();
         });
+
         await hubConnection.StartAsync();
     }
     private async Task ClickJoin()
@@ -127,19 +137,20 @@
         if (playerId != -1)
         {
             connected = true;
-            if (playerId == 1)
+            if (game.playerList.Count() == 2)
             {
                 await hubConnection.InvokeAsync("StartGame");
             }
-            
         }
         else
             Navigation.NavigateTo("/Poker/RoomFull");
         StateHasChanged();
     }
 
-    private void GetNewCards()
+    private async Task GetNewCards()
     {
+        if (game.playerList[playerId].DrawnCards == true)
+            return;
         int cardNeeded = 5 - hand.Count;
         for (int i = 0; i < cardNeeded; i++)
         {
@@ -149,7 +160,7 @@
         var result = game.playerList.Where(x => x.DrawnCards == true).Count();
         if (result == 2)
         {
-            gameEnded = true;
+            await hubConnection.InvokeAsync("ShowWinner");
         }
         StateHasChanged();
     }
@@ -162,8 +173,21 @@
         if (hubConnection is not null)
         {
             await hubConnection.DisposeAsync();
-            throw new Exception("Stupid hub Disposed");
         }
+    }
+
+    private async void PlayAgain()
+    {
+        game.playerList[playerId].Waiting = true;
+        gameEnded = false;
+        foreach(var player in game.playerList)
+        {
+            if (player.Waiting == false)
+                return;
+        }
+        game.ShuffleAndDeal();
+        await hubConnection.InvokeAsync("StartGame");
+
     }
 
     public string GetFilePath(int id)
@@ -173,6 +197,8 @@
 
     public void ThrowCard(int id)
     {
+        if (game.playerList[playerId].DrawnCards == true)
+            return;
         var card = hand.ToList().Where(x => x.CardId == id).First();
         for (int i = 0; i < hand.Count; i++)
         {
@@ -182,5 +208,11 @@
                 break;
             }
         }
+    }
+    public async Task Disconnect()
+    {
+        game.LeaveGame(playerId);
+        await DisposeAsync();
+        Navigation.NavigateTo("/Poker/");
     }
 }

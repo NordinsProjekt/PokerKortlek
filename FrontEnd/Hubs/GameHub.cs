@@ -17,26 +17,11 @@ namespace FrontEnd.Hubs
 
         public async Task SendMood(string username, string mood)
         {
-            //_userlist.UpdateMood(mood, username);
             await Clients.All.SendAsync("Refresh");
         }
 
-        //public async Task ReportBack()
-        //{
-        //    await Clients.All.SendAsync("AnswerCall");
-        //    //Kanske tar bort folk för tidigt.
-        //    //Kommer fortfarande vara kvar i chatten, men inte synas i listan.
-        //    //_userlist.RemoveAllUsersThatDidntAnswer();
-        //}
-
-        //public void ReportingIn()
-        //{
-        //   //_userlist.UserIsStillConnected(Context.ConnectionId);
-        //}
-
         public override async Task OnConnectedAsync()
         {
-            //Console.WriteLine($"{Context.ConnectionId} connected");
             await  base.OnConnectedAsync();
         }
         public async Task ClientLoggingOff(string username)
@@ -45,8 +30,6 @@ namespace FrontEnd.Hubs
         }
         public override async Task OnDisconnectedAsync(Exception e)
         {
-            //Console.WriteLine($"Disconnected {e?.Message} {Context.ConnectionId}");
-            //_userlist.RemoveUser(Context.ConnectionId);
             await Clients.Others.SendAsync("Refresh");
             await base.OnDisconnectedAsync(e);
         }
