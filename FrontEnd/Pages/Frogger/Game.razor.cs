@@ -1,6 +1,14 @@
-﻿namespace FrontEnd.Pages.Frogger
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
+
+namespace FrontEnd.Pages.Frogger
 {
-    public class Game
+    public partial class Game
     {
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await JS.InvokeVoidAsync("CreateGameWindow");
+        }
     }
 }
