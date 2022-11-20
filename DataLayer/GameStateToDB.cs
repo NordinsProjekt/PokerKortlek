@@ -82,6 +82,7 @@ namespace DataLayer
             //    }
 
             //}
+
             //MainDeck
             var deck = ps.Location.Where(x => x.Name == "MainDeck").First();
             for (int i = 0; i < gsr.Deck.Count; i++)

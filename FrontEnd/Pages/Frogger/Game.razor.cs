@@ -8,7 +8,8 @@ namespace FrontEnd.Pages.Frogger
     {
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            await JS.InvokeVoidAsync("CreateGameWindow");
+            await JS.InvokeVoidAsync("AddListeners");
+            await JS.InvokeVoidAsync("StartGame");
         }
     }
 }
