@@ -1,6 +1,17 @@
 ﻿@page "/Magic/Search"
-<h1>MagicSearch</h1>
+@using MtG_Application.Interface;
+@using MtG_Application.DTO;
+@using MtG_Application;
 
-@code {
+<h1>Magic Search</h1>
+<div class="d-flex flex-wrap flex-row bd-highlight mb-3" id="SearchResult">
 
+@foreach (var item in searchResult.OrderBy(x=>x.Name))
+{
+    <div class="p-2 bd-highlight">
+        <h3>@item.Name</h3>
+        <img src="@item.ImageUrl" />
+    </div>
 }
+</div>
+

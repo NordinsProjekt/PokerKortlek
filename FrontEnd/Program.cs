@@ -9,12 +9,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.ResponseCompression;
 using FrontEnd.Hubs;
 using FrontEnd.Classes;
+using MtG_Application.Interface;
+using MtG_Infra;
+using MtG_Application;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<PokerWrapper>();
+builder.Services.AddTransient<IMtGCardRepository, SearchForCard>();
 builder.Services.AddResponseCompression(opts =>
 {
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
