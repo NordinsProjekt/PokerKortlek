@@ -1,5 +1,5 @@
 ﻿var playerX = 240;
-var playerY = 420;
+var playerY = 540;
 var score = 0;
 var cars = [];
 var myCar = new Image();
@@ -32,12 +32,18 @@ function car(x, y, speed) {
     }
 }
 
+function floatingObject(x, y, speed) {
+    this.x = x;
+    this.y = y;
+    this.speed = speed;
+}
+
 function StartGame() {
-    cars.push(new car(0, 120, 1));
-    cars.push(new car(-60, 180, 3));
-    cars.push(new car(-180, 240, 2));
-    cars.push(new car(-60, 300, 4));
-    cars.push(new car(-240, 360, 1));
+    cars.push(new car(0, 240, 1));
+    cars.push(new car(-60, 300, 1.5));
+    cars.push(new car(-180, 360, 2));
+    cars.push(new car(-60, 420, 0.5));
+    cars.push(new car(-240, 480, 1));
     gameLoop();
 }
 function gameLoop() {
@@ -51,17 +57,20 @@ function CreateGameWindow()
     var ctx = canvas.getContext("2d");
     //Start
     ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, 500, 560);
+    ctx.fillRect(0, 0, 600, 560);
     ctx.font = '48px serif';
     ctx.strokeText('Frogger', 0, 50);
 
-    //GamePart
+
+    //GamePart Start and Road
     ctx.fillStyle = "green";
     ctx.fillRect(0, 60, 500, 60);
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 120, 500, 300);
-    ctx.fillStyle = "green";
-    ctx.fillRect(0, 420, 500, 60);
+    ctx.fillStyle = "blue";
+    ctx.fillRect(0, 120, 500, 120);
+    ctx.fillStyle = "black"; //Road
+    ctx.fillRect(0, 240 , 500, 540);
+    ctx.fillStyle = "green"; //Start
+    ctx.fillRect(0, 540, 500, 60);
 
     //Player
     if (playerDead) {
@@ -86,14 +95,7 @@ function CreateGameWindow()
     }
     ctx.font = '48px serif';
     ctx.strokeStyle = "black";
-    ctx.strokeText('X:' + playerX + ' Y:' + playerY + " Score: " + score, 0, 520);
-}
-function DrawPlayer() {
-
-}
-
-function DrawCars() {
-
+    ctx.strokeText('X:' + playerX + ' Y:' + playerY + " Score: " + score, 0, 650);
 }
 
 function AddListeners() {
@@ -127,8 +129,8 @@ function AddListeners() {
 //Ser till att spelaren inte hamnar på utsidan.
 function CheckPlayerPlacement()
 {
-    if (playerY >= 420)
-        playerY = 420;
+    if (playerY >= 540)
+        playerY = 540;
     if (playerY < 60)
         playerY = 60;
     if (playerX >= 420)
@@ -158,7 +160,7 @@ function PlayerWin() {
 function Reset()
 {
     playerX = 240;
-    playerY = 420;
+    playerY = 540;
     playerDead = false;
 }
 function CheckCollisions() {
