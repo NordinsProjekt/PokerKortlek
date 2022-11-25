@@ -4,8 +4,14 @@
 @using MtG_Application;
 
 <h1>Magic Search</h1>
+<input type="text" id="name" @bind="SearchText" /><button onclick="@Search">Sök</button>
 <div class="d-flex flex-wrap flex-row bd-highlight mb-3" id="SearchResult">
-
+    <p>@if (searchResult.Count() == 0)
+        {
+            @("Hittade inga kort")
+        }
+    </p>
+    
 @foreach (var item in searchResult.OrderBy(x=>x.Name))
 {
     <div class="p-2 bd-highlight">

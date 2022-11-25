@@ -10,7 +10,7 @@ namespace MtG_Application
         {
             _repository = _rep;
         }
-        public async Task<List<MtGRecordDTO>> GetCardByName(string name)
+        public async Task<List<MtGCardRecordDTO>> GetCardByName(string name)
         {
             var result = await _repository.GetCardsByName(name);
             return result.Where(m=>m.MultiverseId!=null).GroupBy(x=>x.Name).Select(f=>f.First()).ToList();

@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace MtG_Application.DTO
 {
-    public record MtGRecordDTO(string Name,string Id,string Text, string[] Rules,string ImageUrl, string MultiverseId);
+    public sealed record MtGRulingRecord_DTO(string Date,string Text);
 }

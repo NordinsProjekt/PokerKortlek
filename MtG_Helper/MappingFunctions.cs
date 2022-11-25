@@ -11,9 +11,9 @@ namespace MtG_Infra
 {
     public static class MappingFunctions
     {
-        public static MtGRecordDTO MapICardToNewDto(ICard card)
+        public static MtGCardRecordDTO MapICardToNewDto(ICard card)
         {
-            var cardDto = card.Adapt<MtGRecordDTO>();
+            var cardDto = card.Adapt<MtGCardRecordDTO>();
             return cardDto;
         }
     }

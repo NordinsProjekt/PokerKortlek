@@ -9,12 +9,23 @@ namespace FrontEnd.Pages.Magic
     {
         [Inject]
         IMtGCardRepository Rep { get; set; }
-        List<MtGRecordDTO> searchResult = new List<MtGRecordDTO>();
-        protected override async void OnInitialized()
+        List<MtGCardRecordDTO> searchResult = new List<MtGCardRecordDTO>();
+        string SearchText { get; set; }
+        //protected override async void OnInitialized()
+        //{
+        //    MtGCardService mtg = new MtGCardService(Rep);
+        //    searchResult = await mtg.GetCardByName("Tome");
+        //    StateHasChanged();
+        //}
+
+        public async void Search()
         {
             MtGCardService mtg = new MtGCardService(Rep);
-            searchResult = await mtg.GetCardByName("Tome");
-            StateHasChanged();
+            if (SearchText !="")
+            {
+                searchResult = await mtg.GetCardByName(SearchText);
+                StateHasChanged();
+            }
         }
     }
 }

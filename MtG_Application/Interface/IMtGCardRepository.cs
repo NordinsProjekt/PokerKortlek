@@ -9,6 +9,6 @@ namespace MtG_Application.Interface
 {
     public interface IMtGCardRepository
     {
-        public Task<List<MtGRecordDTO>> GetCardsByName(string name);
+        public Task<List<MtGCardRecordDTO>> GetCardsByName(string name);
     }
 }
