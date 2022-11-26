@@ -10,7 +10,7 @@
     <ProjectReference Include="..\DataLayer\DataLayer.csproj" />
     <ProjectReference Include="..\GameEngine\GameEngine.csproj" />
     <ProjectReference Include="..\MtG_Application\MtG_Application.csproj" />
-    <ProjectReference Include="..\MtG_Helper\MtG_Infra.csproj" />
+    <ProjectReference Include="..\MtG_Helper\MtG_Infrastructur.csproj" />
   </ItemGroup>
 
   <ItemGroup>

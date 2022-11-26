@@ -1,6 +1,8 @@
 ﻿body {
 }
-
+#clickedCard {
+    max-width: 500px;
+}
 img {
     width: 300px;
 }

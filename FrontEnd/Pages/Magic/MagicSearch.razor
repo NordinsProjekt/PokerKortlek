@@ -4,19 +4,40 @@
 @using MtG_Application;
 
 <h1>Magic Search</h1>
-<input type="text" id="name" @bind="SearchText" /><button onclick="@Search">Sök</button>
+<input type="text" id="name" @bind="SearchText" /><button @onclick="@Search">Sök</button>
+<br />
+@if(clickedCard != null)
+    {
+        <div id="clickedCard">
+            <h2>@(clickedCard.Name)</h2>
+            <img src="@(clickedCard.ImageUrl)" />
+            <div>
+                @if (clickedCard.Rulings != null)
+                {
+                    @foreach (var rule in clickedCard.Rulings.OrderBy(x=>x.Date))
+                    {
+                    <p><b>@($"{rule.Date}")</b> @($"{rule.Text}")</p>
+                    }
+                    <br />
+                    <br />
+                }
+
+            </div>
+        </div>
+    }
 <div class="d-flex flex-wrap flex-row bd-highlight mb-3" id="SearchResult">
     <p>@if (searchResult.Count() == 0)
         {
             @("Hittade inga kort")
         }
     </p>
-    
+
+
 @foreach (var item in searchResult.OrderBy(x=>x.Name))
 {
     <div class="p-2 bd-highlight">
         <h3>@item.Name</h3>
-        <img src="@item.ImageUrl" />
+        <img src="@item.ImageUrl" onclick="@(() => ShowCard(@item.Id))" />
     </div>
 }
 </div>

@@ -2,6 +2,7 @@
 using MtG_Application;
 using Microsoft.AspNetCore.Components;
 using MtG_Application.Interface;
+using Microsoft.JSInterop;
 
 namespace FrontEnd.Pages.Magic
 {
@@ -9,14 +10,11 @@ namespace FrontEnd.Pages.Magic
     {
         [Inject]
         IMtGCardRepository Rep { get; set; }
+        [Inject]
+        IJSRuntime JsRuntime { get; set; }
         List<MtGCardRecordDTO> searchResult = new List<MtGCardRecordDTO>();
-        string SearchText { get; set; }
-        //protected override async void OnInitialized()
-        //{
-        //    MtGCardService mtg = new MtGCardService(Rep);
-        //    searchResult = await mtg.GetCardByName("Tome");
-        //    StateHasChanged();
-        //}
+        MtGCardRecordDTO? clickedCard;
+        string? SearchText { get; set; }
 
         public async void Search()
         {
@@ -26,6 +24,13 @@ namespace FrontEnd.Pages.Magic
                 searchResult = await mtg.GetCardByName(SearchText);
                 StateHasChanged();
             }
+        }
+
+        public async void ShowCard(string id)
+        {
+            clickedCard = searchResult.Where(x => x.Id == id).FirstOrDefault();
+            await JsRuntime.InvokeVoidAsync("OnScrollEvent");
+            StateHasChanged();
         }
     }
 }

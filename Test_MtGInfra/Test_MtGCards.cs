@@ -1,4 +1,4 @@
-using MtG_Infra;
+using SearchForCards_MockData;
 using MtG_Application;
 
 namespace Test_MtGInfra
@@ -8,10 +8,10 @@ namespace Test_MtGInfra
         [Fact]
         public async void SearchForCardsWithTomeInTheName_ShouldGetListOfCustomDTO()
         {
-            SearchForCard rep = new SearchForCard();
+            MockData rep = new MockData();
             MtGCardService mtGCardService = new MtGCardService(rep);
-            var cardList = await mtGCardService.GetCardByName("Tome");
-            Assert.Equal(22,cardList.Count);
+            var cardList = await mtGCardService.GetCardByName("TestCard1");
+            Assert.Single(cardList);
         }
     }
 }

@@ -9,17 +9,6 @@ namespace MtG_Infra
 {
     public class SearchForCard : IMtGCardRepository
     {
-        private async Task<List<MtGCardRecordDTO>> ConvertICardToDTO(IOperationResult<List<ICard>> list)
-        {
-            List<MtGCardRecordDTO> dtoList = new List<MtGCardRecordDTO>();
-
-            foreach (var card in list.Value)
-            {
-                dtoList.Add(MappingFunctions.MapICardToNewDto(card));
-            }
-            return dtoList;
-        }
-
         public async Task<List<MtGCardRecordDTO>> GetCardsByName(string name)
         {
             IMtgServiceProvider serviceProvider = new MtgServiceProvider();
@@ -34,6 +23,14 @@ namespace MtG_Infra
             {
                 return new List<MtGCardRecordDTO>();
             }
+        }
+
+        private async Task<List<MtGCardRecordDTO>> ConvertICardToDTO(IOperationResult<List<ICard>> list)
+        {
+            List<MtGCardRecordDTO> dtoList = new List<MtGCardRecordDTO>();
+            foreach (var card in list.Value)
+                dtoList.Add(MappingFunctions.MapICardToNewDto(card));
+            return dtoList;
         }
     }
 }

@@ -15,11 +15,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrontEnd", "FrontEnd\FrontE
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MtG_Komponent", "MtG_Komponent", "{08CBEA92-55F8-4455-B159-28848211F4BD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MtG_Infra", "MtG_Helper\MtG_Infra.csproj", "{D45DD750-E74D-4932-86F6-AC753AA9E288}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MtG_Infrastructur", "MtG_Helper\MtG_Infrastructur.csproj", "{D45DD750-E74D-4932-86F6-AC753AA9E288}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MtG_Application", "MtG_Application\MtG_Application.csproj", "{13B75BC4-F284-48DE-80CD-93EF8118A750}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test_MtGInfra", "Test_MtGInfra\Test_MtGInfra.csproj", "{05AD87B8-13DE-4E50-9323-C5943DEA96B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchForCards_MockData", "SearchForCards_MockData\SearchForCards_MockData.csproj", "{AB66C673-BCEA-40FA-AB5A-CF1945993FFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{05AD87B8-13DE-4E50-9323-C5943DEA96B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05AD87B8-13DE-4E50-9323-C5943DEA96B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05AD87B8-13DE-4E50-9323-C5943DEA96B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB66C673-BCEA-40FA-AB5A-CF1945993FFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB66C673-BCEA-40FA-AB5A-CF1945993FFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB66C673-BCEA-40FA-AB5A-CF1945993FFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB66C673-BCEA-40FA-AB5A-CF1945993FFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +73,7 @@ Global
 		{D45DD750-E74D-4932-86F6-AC753AA9E288} = {08CBEA92-55F8-4455-B159-28848211F4BD}
 		{13B75BC4-F284-48DE-80CD-93EF8118A750} = {08CBEA92-55F8-4455-B159-28848211F4BD}
 		{05AD87B8-13DE-4E50-9323-C5943DEA96B5} = {08CBEA92-55F8-4455-B159-28848211F4BD}
+		{AB66C673-BCEA-40FA-AB5A-CF1945993FFD} = {08CBEA92-55F8-4455-B159-28848211F4BD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3568CCBD-26CE-4D4A-8C30-4CAE42CDD414}

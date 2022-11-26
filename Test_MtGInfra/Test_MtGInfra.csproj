@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MtG_Application\MtG_Application.csproj" />
-    <ProjectReference Include="..\MtG_Helper\MtG_Infra.csproj" />
+    <ProjectReference Include="..\SearchForCards_MockData\SearchForCards_MockData.csproj" />
   </ItemGroup>
 
 </Project>
